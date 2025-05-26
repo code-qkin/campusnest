@@ -1,0 +1,17 @@
+.login-bg {
+  background: url('../img/backsign.png') no-repeat center fixed;
+  background-size: cover;
+  height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  padding: 2rem 1rem;
+}
+
+.login-card {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 1rem;
+}
+
+.text-me{
+  color:244a71!important;
+  font-family: 'Poppins', sans-serif!important;
+}

@@ -1,0 +1,351 @@
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from './firebase';
+import { useAuth } from './authen.js';
+
+function PropertyList() {
+  const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [filters, setFilters] = useState({
+    type: '',
+    minPrice: '',
+    maxPrice: '',
+    bedrooms: ''
+  });
+  const { currentUser } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        let q = query(collection(db, 'properties'), where('status', '==', 'available'));
+        
+        // Apply filters
+        if (filters.type) {
+          q = query(q, where('type', '==', filters.type));
+        }
+        if (filters.minPrice) {
+          q = query(q, where('price', '>=', Number(filters.minPrice)));
+        }
+        if (filters.maxPrice) {
+          q = query(q, where('price', '<=', Number(filters.maxPrice)));
+        }
+        if (filters.bedrooms) {
+          q = query(q, where('bedrooms', '==', Number(filters.bedrooms)));
+        }
+
+        const querySnapshot = await getDocs(q);
+        setProperties(querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })));
+      } catch (err) {
+        setError('Failed to load properties');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProperties();
+  }, [filters]);
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  if (loading) {
+    return (
+      <div className="text-center my-5">
+        <div className="spinner-border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container my-4">
+      <div className="row mb-4">
+        <div className="col-md-8">
+          <button 
+            onClick={() => navigate('/dashboard')}
+            className="btn btn-outline-secondary me-2"
+          >
+            <i className="bi bi-arrow-left"></i> Back to Profile
+          </button>
+          <h2 className="d-inline-block ms-2">Available Properties</h2>
+        </div>
+        {!currentUser && (
+          <div className="col-md-4 text-end">
+            <Link to="/admin/properties/new" className="btn btn-primary">
+              Add New Property
+            </Link>
+          </div>
+        )}
+      </div>
+
+      {/* Filter Section */}
+      <div className="card mb-4">
+        <div className="card-body">
+          <div className="row g-3">
+            <div className="col-md-3">
+              <select
+                className="form-select"
+                name="type"
+                value={filters.type}
+                onChange={handleFilterChange}
+              >
+                <option value="">All Types</option>
+                <option value="apartment">Apartment</option>
+                <option value="house">House</option>
+                <option value="condo">Condo</option>
+              </select>
+            </div>
+            <div className="col-md-2">
+              <input
+                type="number"
+                className="form-control"
+                placeholder="Min Price"
+                name="minPrice"
+                value={filters.minPrice}
+                onChange={handleFilterChange}
+              />
+            </div>
+            <div className="col-md-2">
+              <input
+                type="number"
+                className="form-control"
+                placeholder="Max Price"
+                name="maxPrice"
+                value={filters.maxPrice}
+                onChange={handleFilterChange}
+              />
+            </div>
+            <div className="col-md-2">
+              <select
+                className="form-select"
+                name="bedrooms"
+                value={filters.bedrooms}
+                onChange={handleFilterChange}
+              >
+                <option value="">Any Beds</option>
+                <option value="1">1 Bedroom</option>
+                <option value="2">2 Bedrooms</option>
+                <option value="3">3+ Bedrooms</option>
+              </select>
+            </div>
+            <div className="col-md-3">
+              <button
+                className="btn btn-outline-secondary w-100"
+                onClick={() => setFilters({
+                  type: '',
+                  minPrice: '',
+                  maxPrice: '',
+                  bedrooms: ''
+                })}
+              >
+                Clear Filters
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {error && <div className="alert alert-danger">{error}</div>}
+
+      <div className="row">
+        {properties.length === 0 ? (
+          <div className="col-12">
+            <div className="alert alert-info">No properties match your filters</div>
+          </div>
+        ) : (
+          properties.map(property => (
+            <div key={property.id} className="col-md-6 col-lg-4 mb-4">
+              <div className="card h-100">
+                {property.images && property.images[0] && (
+                  <img 
+                    src={property.images[0]} 
+                    className="card-img-top property-image"
+                    alt={property.title}
+                  />
+                )}
+                <div className="card-body">
+                  <h5 className="card-title">{property.title}</h5>
+                  <p className="card-text text-muted">{property.location}</p>
+                  <div className="d-flex justify-content-between mb-2">
+                    <span>${property.price}/mo</span>
+                    <span>{property.bedrooms} bed {property.type}</span>
+                  </div>
+                  <Link 
+                    to={`/listings/${property.id}`} 
+                    className="btn btn-primary w-100"
+                  >
+                    View Details
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default PropertyList;
+
+
+<div className="container py-4">
+        <div className="row">
+          {/* Sidebar */}
+          <div className="col-md-3 mb-4">
+            <div className="card">
+              <div className="card-header bg-primary text-white">
+                <h5>User Menu</h5>
+              </div>
+              <div className="list-group list-group-flush">
+                <Link to="/dashboard" className="list-group-item list-group-item-action active">
+                  Dashboard
+                </Link>
+                <Link to="/dashboard/profile" className="list-group-item list-group-item-action">
+                  My Profile
+                </Link>
+                <Link to="/dashboard/booking" className="list-group-item list-group-item-action">
+                  My Bookings
+                </Link>
+                <Link to="/listing" className="list-group-item list-group-item-action">
+                  Find Housing
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="list-group-item list-group-item-action text-danger"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="col-md-9">
+            <div className="card mb-4">
+              <div className="card-header">
+                <h4>Welcome, {currentUser.email}</h4>
+              </div>
+              <div className="card-body">
+                <h5>Your Recent Activity</h5>
+
+                {error && <div className="alert alert-danger">{error}</div>}
+
+                <div className="row mt-4">
+                  {/* Bookings Summary Card */}
+                  <div className="col-md-6 mb-4">
+                    <div className="card h-100">
+                      <div className="card-body">
+                        <h5>My Bookings ({bookings.length})</h5>
+                        {loading ? (
+                          <div className="spinner-border text-primary" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                          </div>
+                        ) : (
+                          <>
+                            {bookings.length > 0 ? (
+                              <ul className="list-group">
+                                {bookings.slice(0, 3).map(booking => (
+                                  <li key={booking.id} className="list-group-item">
+                                    <strong>{booking.propertyName}</strong><br />
+                                    Status: <span className={`badge ${booking.status === 'confirmed' ? 'bg-success' :
+                                        booking.status === 'pending' ? 'bg-warning' : 'bg-danger'
+                                      }`}>
+                                      {booking.status}
+                                    </span>
+                                  </li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <p>No bookings yet</p>
+                            )}
+                            <Link to="/dashboard/booking" className="btn btn-primary mt-3">
+                              View All Bookings
+                            </Link>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Properties Card - NEW SECTION */}
+                  <div className="col-md-6 mb-4">
+                    <div className="card h-100">
+                      <div className="card-body">
+                        <h5>My Properties ({properties.length})</h5>
+                        {loading ? (
+                          <div className="spinner-border text-primary" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                          </div>
+                        ) : (
+                          <>
+                            {properties.length > 0 ? (
+                              <div className="list-group">
+                                {properties.slice(0, 3).map(property => (
+                                  <Link
+                                    key={property.id}
+                                    to={`/listing/${property.id}`}
+                                    className="list-group-item list-group-item-action"
+                                  >
+                                    <div className="d-flex justify-content-between">
+                                      <strong>{property.title}</strong>
+                                      <span>${property.price}/mo</span>
+                                    </div>
+                                    <small className="text-muted">{property.location}</small>
+                                  </Link>
+                                ))}
+                              </div>
+                            ) : (
+                              <div className="text-center py-3">
+                                <p>You haven't booked any properties yet</p>
+                                <Link to="/listing" className="btn btn-primary">
+                                  Browse Listings
+                                </Link>
+                              </div>
+                            )}
+                            {properties.length > 0 && (
+                              <Link to="/dashboard/properties" className="btn btn-secondary mt-3">
+                                View All Properties
+                              </Link>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Recent Activity Section */}
+                <div className="card mt-4">
+                  <div className="card-header">
+                    <h5>Quick Actions</h5>
+                  </div>
+                  <div className="card-body">
+                    <div className="d-grid gap-2 d-md-flex">
+                      <Link to="/listings" className="btn btn-primary me-md-2">
+                        Find Housing
+                      </Link>
+                      <Link to="/dashboard/profile" className="btn btn-outline-primary">
+                        Update Profile
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>

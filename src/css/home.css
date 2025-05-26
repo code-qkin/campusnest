@@ -1,0 +1,44 @@
+.app-container{
+    background-color: #C9E8F9!important;
+    color: #244a71!important;
+    font-family: 'Poppins', sans-serif!important;
+}
+.nav-color{
+    color:#244a71!important;
+}
+
+.btn-me{
+    color:#244a71!important;
+    border-color: #244a71!important;
+}
+
+.btn-me a{
+    color:#244a71!important;
+}
+
+.btn-me:hover{
+    background-color: #244a71!important;
+    color: white!important;
+}
+
+.btn-me:hover a{
+    color: white!important;
+}
+
+.border-none{
+    border: none!important;
+}
+
+.primary-bg{
+    background-color: #244a71!important;
+}
+
+.list-group-item {
+  border: none !important;
+}
+
+.list-group{
+    border: none !important;
+    --bs-list-group-bg: none!important;
+}
+

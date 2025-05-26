@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "campusnest-36767"
+  },
+  "targets": {
+    "campusnest-36767": {
+      "hosting": {
+        "campusnest": [
+          "campusnest-36767"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

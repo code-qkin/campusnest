@@ -1,5 +1,6 @@
 import '../css/signup.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import { faUser, faHouse, faKey } from '@fortawesome/free-solid-svg-icons'
 import { Link, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -21,7 +22,7 @@ function Signup() {
   const [loadingAdminCheck, setLoadingAdminCheck] = useState(true);
 
   const navigate = useNavigate();
-  const ADMIN_ACCESS_PASSWORD = "CampusNestAdmin123!"; 
+  const ADMIN_ACCESS_PASSWORD = "CampusNestAdmin123!";
 
   useEffect(() => {
     const checkAdmin = async () => {
@@ -79,8 +80,9 @@ function Signup() {
           <div className="col-md-6">
             <div className="card p-4 shadow signup-card text-center">
               <div className="mb-3">
-                <Link to='/' className="text-decoration-none">
-                  <h3 className="mt-2 text-primary fw-bold"><FontAwesomeIcon icon={faHouse} /> Campus Nest</h3>
+                <Link to='/' className="text-decoration-none" style={{ color: '#244a71' }}>
+                  <i className="fas fa-home fa-2x text-primary"></i>
+                  <h3 className="mt-2 text-me fw-bold"><FontAwesomeIcon icon={faHouse} /> Campus Nest</h3>
                 </Link>
               </div>
               <h4 className="mb-4">Register</h4>
@@ -94,15 +96,13 @@ function Signup() {
                   <input type="text" className="form-control border-start-0" placeholder="Username" onChange={(e) => setUsername(e.target.value)} required />
                 </div>
                 <div className="mb-3 input-group">
-                  <span className="input-group-text bg-white border-end-0"><FontAwesomeIcon icon={faUser} /></span>
+                  <span className="input-group-text bg-white border-end-0"><FontAwesomeIcon icon={faEnvelope} /></span>
                   <input type="email" className="form-control border-start-0" placeholder="Email" onChange={(e) => setEmail(e.target.value)} required />
                 </div>
                 <div className="mb-3">
                   <select className="form-select" value={institution} onChange={(e) => setInstitution(e.target.value)} required>
                     <option value="">Select your Institution</option>
                     <option value="futa">Federal University Of Technology Akure (FUTA)</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
                   </select>
                 </div>
                 <div className="mb-3 input-group">
@@ -132,7 +132,7 @@ function Signup() {
                 <div className="mb-2 form-check text-start">
                   <input type="checkbox" className="form-check-input" id="exampleCheck1" required />
                   <label className="form-check-label" htmlFor="exampleCheck1">
-                    I agree to the <a href="#" className='linkme'>Terms of Service</a> and <a href="#" className='linkme'>Privacy Policy</a>
+                    I agree to the <a href="#" className='text-decoration-none fw-bold' style={{ color: '#244a71' }}>Terms of Service</a> and <a href="#" className='text-decoration-none fw-bold' style={{ color: '#244a71' }}>Privacy Policy</a>
                   </label>
                 </div>
 
@@ -144,7 +144,7 @@ function Signup() {
               </form>
 
               <p className="mt-3 small text-muted">
-                Already have an account? <Link className='fw-bold text-decoration-none' to='/login'>Sign in here</Link>
+                Already have an account? <Link className='fw-bold text-decoration-none' to='/login' style={{ color: '#244a71' }}>Sign in here</Link>
               </p>
 
               {!loadingAdminCheck && !adminExists && (

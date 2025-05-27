@@ -44,7 +44,7 @@ return (
         <div className="col-11 col-sm-9 col-md-6 col-lg-5 col-xl-4">
           <div className="card p-4 shadow login-card text-center">
             <div className="mb-3">
-              <Link to='/' className="text-decoration-none">
+              <Link to='/' className="text-decoration-none" style={{ color: '#244a71' }}>
                 <i className="fas fa-home fa-2x text-primary"></i>
                 <h3 className="mt-2 text-me fw-bold"><FontAwesomeIcon icon={faHouse} /> Campus Nest</h3>
               </Link>
@@ -65,7 +65,7 @@ return (
               </div>
             </form>
             <p className="mt-3 small text-muted">
-              Already have an account? <Link className='fw-bold text-decoration-none' to='/signup'>Sign up here</Link>
+              Already have an account? <Link className='fw-bold text-decoration-none' to='/signup' style={{ color: '#244a71' }}>Sign up here</Link>
             </p>
           </div>
         </div>

@@ -42,3 +42,48 @@
     --bs-list-group-bg: none!important;
 }
 
+/* All buttons */
+.btn, button {
+  border-color: #244a71 !important;
+}
+
+/* Button backgrounds for outline style */
+.btn-outline-primary,
+.btn-outline-secondary,
+.btn-outline-success,
+.btn-outline-danger,
+.btn-outline-warning,
+.btn-outline-info,
+.btn-outline-dark,
+.btn-outline-light {
+  border-color: #244a71 !important;
+}
+
+/* Button backgrounds for solid style */
+.btn-primary,
+.btn-secondary,
+.btn-success,
+.btn-danger,
+.btn-warning,
+.btn-info,
+.btn-dark,
+.btn-light {
+  background-color: #244a71 !important;
+  border-color: #244a71 !important;
+  color: #fff !important;
+}
+
+/* On hover/focus for outline buttons */
+.btn-outline-primary:hover,
+.btn-outline-secondary:hover,
+.btn-outline-success:hover,
+.btn-outline-danger:hover,
+.btn-outline-warning:hover,
+.btn-outline-info:hover,
+.btn-outline-dark:hover,
+.btn-outline-light:hover {
+  background-color: #244a71 !important;
+  color: #fff !important;
+  border-color: #244a71 !important;
+}
+

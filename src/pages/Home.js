@@ -76,7 +76,7 @@ function Home() {
                 </nav>
                 <section className="hero">
                     <div className="container-fluid">
-                        <div className="row align-items-center">
+                        <div className="row align-items-center pt-4">
                             <div className="col-md-7 text-center text-md-start">
                                 <h1 className='fw-bold'>Find Your Perfect Student Home</h1>
                                 <p className="lead">Browse verified listings around your campus</p>

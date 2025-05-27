@@ -10,3 +10,11 @@
   background-color: rgba(255, 255, 255, 0.95);
   border-radius: 1rem;
 }
+
+@media (max-width: 576px) {
+  body {
+    background: url('../img/backsign.png') no-repeat center fixed;
+    background-size: cover;
+    padding: 2rem 1rem;
+  }
+}
